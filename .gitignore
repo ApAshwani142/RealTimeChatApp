@@ -1,0 +1,23 @@
+# Dependencies
+**/node_modules
+
+# Builds
+**/dist
+**/dist-ssr
+
+# Local env files (do not commit secrets)
+Backend/.env
+Frontend/.env
+*.local
+
+# Logs
+**/logs
+**/*.log
+
+# Editor/OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+
