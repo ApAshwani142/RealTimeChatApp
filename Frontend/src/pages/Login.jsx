@@ -3,19 +3,25 @@ import axios from 'axios'
 import AuthShell from '../components/AuthShell'
 import AuthCard from '../components/auth/AuthCard'
 import BrandHeader from '../components/auth/BrandHeader'
-import { getApiBaseUrl } from '../config/env'
+import { getRuntimeConfig } from '../config/env'
 
 export default function Login({ onLogin }) {
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const apiUrl = getApiBaseUrl()
+  const { apiBaseUrl: apiUrl, error: configError } = getRuntimeConfig()
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
     setLoading(true)
+
+    if (configError || !apiUrl) {
+      setError('App is misconfigured (missing VITE_API_URL). Fix Vercel env vars and redeploy.')
+      setLoading(false)
+      return
+    }
 
     const trimmedUserId = userId.trim()
     const trimmedEmail = email.trim()
@@ -96,6 +102,7 @@ export default function Login({ onLogin }) {
             {loading ? 'Starting…' : 'Start Chatting'}
           </button>
 
+          {configError ? <div className="text-sm text-red-500">{configError}</div> : null}
           {error ? <div className="text-sm text-red-500">{error}</div> : null}
         </form>
 

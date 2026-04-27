@@ -16,23 +16,46 @@ function assertAbsoluteHttpUrl(url, name) {
   }
 }
 
-export function getApiBaseUrl() {
-  const fromEnv = normalizeBaseUrl(import.meta.env.VITE_API_URL)
+export function getRuntimeConfig() {
   const fallbackDev = 'http://localhost:5001'
-  const value = fromEnv || (import.meta.env.DEV ? fallbackDev : '')
 
-  if (!value) {
-    throw new Error(
-      'Missing VITE_API_URL. In production you must set it on Vercel to your Render backend URL (e.g. https://your-service.onrender.com).',
-    )
+  const apiFromEnv = normalizeBaseUrl(import.meta.env.VITE_API_URL)
+  const apiBaseUrlRaw = apiFromEnv || (import.meta.env.DEV ? fallbackDev : '')
+
+  if (!apiBaseUrlRaw) {
+    return {
+      apiBaseUrl: '',
+      socketBaseUrl: '',
+      error:
+        'Deployment misconfigured: missing VITE_API_URL. Set it on Vercel to your Render backend URL (example: https://your-service.onrender.com) and redeploy.',
+    }
   }
 
-  return assertAbsoluteHttpUrl(value, 'VITE_API_URL')
+  let apiBaseUrl
+  try {
+    apiBaseUrl = assertAbsoluteHttpUrl(apiBaseUrlRaw, 'VITE_API_URL')
+  } catch (e) {
+    return { apiBaseUrl: '', socketBaseUrl: '', error: e?.message || String(e) }
+  }
+
+  const socketFromEnv = normalizeBaseUrl(import.meta.env.VITE_SOCKET_URL)
+  const socketBaseUrlRaw = socketFromEnv || apiBaseUrl
+
+  let socketBaseUrl
+  try {
+    socketBaseUrl = assertAbsoluteHttpUrl(socketBaseUrlRaw, 'VITE_SOCKET_URL')
+  } catch (e) {
+    return { apiBaseUrl, socketBaseUrl: '', error: e?.message || String(e) }
+  }
+
+  return { apiBaseUrl, socketBaseUrl, error: '' }
+}
+
+export function getApiBaseUrl() {
+  return getRuntimeConfig().apiBaseUrl
 }
 
 export function getSocketBaseUrl() {
-  const fromEnv = normalizeBaseUrl(import.meta.env.VITE_SOCKET_URL)
-  const value = fromEnv || getApiBaseUrl()
-  return assertAbsoluteHttpUrl(value, 'VITE_SOCKET_URL')
+  return getRuntimeConfig().socketBaseUrl
 }
 
