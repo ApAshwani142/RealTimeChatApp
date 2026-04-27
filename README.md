@@ -36,3 +36,22 @@ npm run dev
 
 - If your frontend runs on a different port, add it to `Backend/.env` in `CLIENT_ORIGIN`.
 
+## Deploy (Render + Vercel)
+
+### Backend (Render)
+
+Set these environment variables on Render:
+
+- `MONGODB_URI`: your production Mongo connection string
+- `CLIENT_ORIGIN`: your Vercel frontend origin(s), comma-separated. Example:
+  - `https://your-app.vercel.app,https://*.vercel.app`
+
+### Frontend (Vercel)
+
+Set these environment variables on Vercel (important: **must be present at build time**):
+
+- `VITE_API_URL`: your Render backend base URL, e.g. `https://your-service.onrender.com`
+- `VITE_SOCKET_URL`: same as above (or omit to reuse `VITE_API_URL`)
+
+If `VITE_API_URL` is missing in production, the frontend will otherwise try calling `/api/*` on the Vercel domain and you'll see `404 /api/login`.
+

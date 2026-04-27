@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
+import { getApiBaseUrl } from '../config/env'
 
 function getInitials(name) {
   const trimmed = String(name || '').trim()
@@ -25,7 +26,7 @@ function getAvatarGradient(username) {
 }
 
 export default function Contacts({ currentUser, onLogout, onlineIds, onStartChat, onBack }) {
-  const apiUrl = import.meta.env.VITE_API_URL
+  const apiUrl = getApiBaseUrl()
   const currentUserId = currentUser.userId
 
   const [contacts, setContacts] = useState([])

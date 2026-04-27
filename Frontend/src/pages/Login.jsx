@@ -3,13 +3,14 @@ import axios from 'axios'
 import AuthShell from '../components/AuthShell'
 import AuthCard from '../components/auth/AuthCard'
 import BrandHeader from '../components/auth/BrandHeader'
+import { getApiBaseUrl } from '../config/env'
 
 export default function Login({ onLogin }) {
   const [userId, setUserId] = useState('')
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const apiUrl = import.meta.env.VITE_API_URL
+  const apiUrl = getApiBaseUrl()
 
   async function handleSubmit(e) {
     e.preventDefault()

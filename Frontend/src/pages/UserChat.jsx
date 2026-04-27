@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import axios from 'axios'
+import { getApiBaseUrl } from '../config/env'
 
 import ChatSidebar from '../components/chat/ChatSidebar'
 import ChatHeader from '../components/chat/ChatHeader'
@@ -7,7 +8,7 @@ import MessageList from '../components/chat/MessageList'
 import MessageComposer from '../components/chat/MessageComposer'
 
 export default function UserChat({ currentUser, onLogout, socket }) {
-  const apiUrl = import.meta.env.VITE_API_URL
+  const apiUrl = getApiBaseUrl()
   const currentUserId = currentUser.userId
 
   const bottomRef = useRef(null)

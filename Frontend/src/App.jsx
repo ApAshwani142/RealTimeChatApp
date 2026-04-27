@@ -3,6 +3,7 @@ import { io } from 'socket.io-client'
 
 import Login from './pages/Login'
 import UserChat from './pages/UserChat'
+import { getSocketBaseUrl } from './config/env'
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(() => {
@@ -12,8 +13,7 @@ export default function App() {
     return { userId, email }
   })
 
-  const apiUrl = import.meta.env.VITE_API_URL
-  const socketUrl = import.meta.env.VITE_SOCKET_URL || apiUrl
+  const socketUrl = getSocketBaseUrl()
 
   const socketRef = useRef(null)
   const [socket, setSocket] = useState(null)

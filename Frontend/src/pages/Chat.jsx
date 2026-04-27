@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import axios from 'axios'
+import { getApiBaseUrl } from '../config/env'
 
 import ChatSidebar from '../components/chat/ChatSidebar'
 import ChatHeader from '../components/chat/ChatHeader'
@@ -15,7 +16,7 @@ export default function Chat({
   onlineIds,
   socket,
 }) {
-  const apiUrl = import.meta.env.VITE_API_URL
+  const apiUrl = getApiBaseUrl()
   const currentUserId = currentUser.userId
 
   const bottomRef = useRef(null)
