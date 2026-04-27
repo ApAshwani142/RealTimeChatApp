@@ -6,6 +6,7 @@ const { Server } = require('socket.io')
 
 const createApp = require('./app')
 const { setupSocket } = require('./socket')
+const { buildCorsOriginHandler } = require('./cors')
 
 async function main() {
   const PORT = process.env.PORT || 5000
@@ -46,18 +47,7 @@ async function main() {
   const app = createApp()
 
   const httpServer = http.createServer(app)
-
-  const allowedOrigins = (process.env.CLIENT_ORIGIN || '')
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean)
-
-  function corsOriginHandler(origin, callback) {
-    if (!origin) return callback(null, true)
-    if (allowedOrigins.length === 0) return callback(null, true)
-    if (allowedOrigins.includes(origin)) return callback(null, true)
-    return callback(null, false)
-  }
+  const corsOriginHandler = buildCorsOriginHandler()
 
   const io = new Server(httpServer, {
     cors: {
